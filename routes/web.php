@@ -3,10 +3,12 @@
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\User\DashboardController as UserDashboard;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -28,6 +30,13 @@ Route::middleware('auth', 'userRole', 'verified')->group(function () {
     Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::post('comments/{comment}/replies', [CommentController::class, 'reply'])->name('comments.reply');
     Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::post('posts/{post}/bookmark', [BookmarkController::class, 'store'])->name('posts.bookmark');
+    Route::delete('posts/{post}/unbookmark', [BookmarkController::class, 'destroy'])->name('posts.unbookmark');
+    Route::get('bookmarks', function () {
+        $bookmarks = Auth::user()->bookmarks()->with('post')->get();
+        return view('bookmarks.index', compact('bookmarks'));
+    })->name('bookmarks.index');
+    
 });
 
 // Admin Routes

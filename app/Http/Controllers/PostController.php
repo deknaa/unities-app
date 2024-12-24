@@ -38,7 +38,7 @@ class PostController extends Controller
 
         $post->save();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Post created successfully!');
+        return redirect()->route('dashboard')->with('success', 'Post created successfully!');
     }
 
     public function show(Post $post)
@@ -76,7 +76,7 @@ class PostController extends Controller
 
         $post->save();
 
-        return redirect()->route('posts.index')->with('success', 'Post updated successfully!');
+        return redirect()->route('dashboard')->with('success', 'Post updated successfully!');
     }
 
     public function destroy(Post $post)
@@ -89,6 +89,6 @@ class PostController extends Controller
 
         $post->delete();
 
-        return redirect()->route('posts.index')->with('success', 'Post deleted successfully!');
+        return redirect()->route('dashboard')->with('success', 'Post deleted successfully!');
     }
 }

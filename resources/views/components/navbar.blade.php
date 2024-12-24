@@ -28,7 +28,7 @@
                         <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
                         <a href="{{ route('profile.edit') }}" class="nav-link">Profile</a>
                         <a href="{{ route('posts.create') }}" class="nav-link">Post</a>
-                        <a href="{{ route('login') }}" class="nav-link">Bookmark</a>
+                        <a href="{{ route('bookmarks.index') }}" class="nav-link">Bookmark</a>
                         <form method="POST" action="{{ route('logout') }}" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-outline-light">

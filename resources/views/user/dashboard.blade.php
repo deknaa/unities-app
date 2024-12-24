@@ -71,28 +71,40 @@
                     </button>
     
                     <!-- Like Button -->
-                    {{-- <button class="btn btn-link text-decoration-none text-muted p-0">
-                        <i class="far fa-heart me-2"></i>
-                        <span class="small me-3">{{ $post->likes->count() }}</span>
-                    </button> --}}
-                    <form action="{{ route('posts.like', $post->id) }}" method="POST" class="d-flex">
+                    <form action="{{ route('posts.like', $post->id) }}" method="POST" class="d-inline">
                         @csrf
-                        <button type="submit" class="btn btn-link text-decoration-none text-muted p-0"><i class="fa-regular fa-thumbs-up me-2"></i></button>
-                        <p>{{ $post->likes->count() }}</p>
+                        <button type="submit" class="btn btn-link text-decoration-none text-muted p-0">
+                            <i class="fa-regular fa-thumbs-up me-2"></i>
+                            <span class="me-2">{{ $post->likes->count() }}</span>
+                        </button>
                     </form>
                     
-                    <form action="{{ route('posts.unlike', $post->id) }}" method="POST" class="d-flex">
+                    <form action="{{ route('posts.unlike', $post->id) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-link text-decoration-none text-muted p-0"><i class="fa-regular fa-thumbs-down me-2"></i></button>
-                        <p>0</p>
+                        <button type="submit" class="btn btn-link text-decoration-none text-muted p-0">
+                            <i class="fa-regular fa-thumbs-down me-2"></i>
+                            <span class="me-2">0</span>
+                        </button>
                     </form>
     
                     <!-- Bookmark Button -->
-                    <button class="btn btn-link text-decoration-none text-muted p-0">
-                        <i class="far fa-bookmark me-2"></i>
-                        <span class="small me-3">{{ $post->bookmarks->count() }}</span>
-                    </button>
+                    <form action="{{ route('posts.bookmark', $post->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-link text-decoration-none text-muted p-0">
+                            <i class="fa-solid fa-bookmark me-2"></i>
+                            <span class="small me-3">{{ $post->bookmarks->count() }}</span>
+                        </button>
+                    </form>
+                    <form action="{{ route('posts.unbookmark', $post->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-link text-decoration-none text-muted p-0">
+                            <i class="far fa-bookmark me-2"></i>
+                            <span class="me-2">0</span>
+                        </button>
+                    </form>
+                    
 
                     <!-- Bookmark Button -->
                     <a href="{{ route('posts.show', $post->id) }}" class="btn btn-link text-decoration-none text-muted ms-auto">
