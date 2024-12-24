@@ -25,7 +25,7 @@
                             </button>
                         </form>
                     @elseif(Auth::user()->role == 'user')
-                        <a href="{{ route('login') }}" class="nav-link">Profile</a>
+                        <a href="{{ route('profile.edit') }}" class="nav-link">Profile</a>
                         <a href="{{ route('login') }}" class="nav-link">Post</a>
                         <a href="{{ route('login') }}" class="nav-link">Bookmark</a>
                         <form method="POST" action="{{ route('logout') }}" class="d-inline">
