@@ -15,7 +15,7 @@
                 @auth
                 <div class="navbar-nav align-items-center gap-2">
                     @if(Auth::user()->role == 'admin')
-                        <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
+                        <a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a>
                         <a href="{{ route('login') }}" class="nav-link">Manage Post</a>
                         <a href="{{ route('login') }}" class="nav-link">Total Pengguna</a>
                         <form method="POST" action="{{ route('logout') }}" class="d-inline">
@@ -25,6 +25,7 @@
                             </button>
                         </form>
                     @elseif(Auth::user()->role == 'user')
+                        <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
                         <a href="{{ route('profile.edit') }}" class="nav-link">Profile</a>
                         <a href="{{ route('login') }}" class="nav-link">Post</a>
                         <a href="{{ route('login') }}" class="nav-link">Bookmark</a>
