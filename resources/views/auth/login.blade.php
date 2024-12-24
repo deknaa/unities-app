@@ -44,6 +44,15 @@
                     {{ __('Log in') }}
                 </button>
 
+                <!-- Google Login -->
+                <div class="text-center mt-3">
+                    <p class="text-muted">Or login with</p>
+                    <a href="{{ route('google.login') }}" class="btn btn-outline-dark btn-lg w-100">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google" width="20" height="20" class="me-2">
+                        Continue with Google
+                    </a>
+                </div>
+
                 <!-- Register Link -->
                 <p class="mt-3 text-center">
                     Don't have an account? <a href="{{ route('register') }}" class="text-decoration-none">Register here</a>
