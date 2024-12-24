@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\User\DashboardController as UserDashboard;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,7 @@ Route::middleware('auth')->group(function () {
 // User Routes
 Route::middleware('auth', 'userRole', 'verified')->group(function () {
     Route::get('/dashboard/user', [UserDashboard::class, 'index'])->name('dashboard');
+    Route::resource('posts', PostController::class);
 });
 
 // Admin Routes

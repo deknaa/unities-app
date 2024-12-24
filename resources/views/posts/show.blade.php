@@ -1,24 +1,6 @@
 <x-app-layout>
     <x-navbar></x-navbar>
-    {{-- <div class="container">
-        <h1>All Posts</h1>
-        @foreach($posts as $post)
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">{{ $post->user->fullname }}</h5>
-                    <p class="card-text">{{ $post->content }}</p>
-                    @if($post->media_path)
-                        <p class="text-center"><img src="{{ asset('storage/' . $post->media_path) }}" alt="Media" class="img-fluid w-25"></p>
-                    @endif
-                    <a href="{{ route('posts.show', $post->id) }}" class="btn btn-primary">View</a>
-                </div>
-            </div>
-        @endforeach
-    
-        {{ $posts->links() }}
-    </div> --}}
-    <div class="container py-3">
-        @foreach ($posts as $post)
+   <div class="container py-3">
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-body p-3">
                 <!-- Post Header: Profile, Name, Time -->
@@ -83,15 +65,13 @@
                     </button>
 
                     <!-- Bookmark Button -->
-                    <a href="{{ route('posts.show', $post->id) }}" class="btn btn-link text-decoration-none text-muted ms-auto">
-                        <i class="far fa-eye me-1"></i>
-                        <span class="small">Lihat Detail</span>
+                    <a href="{{ route('admin.dashboard') }}" class="btn btn-link text-decoration-none text-muted ms-auto">
+                        <i class="fa-solid fa-arrow-left me-1"></i>
+                        <span class="small">Kembali</span>
                     </a>
                 </div>
             </div>
         </div>
-        @endforeach
-        {{ $posts->links() }}
     </div>
     
     <style>
