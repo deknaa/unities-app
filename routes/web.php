@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\User\DashboardController as UserDashboard;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +23,11 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth', 'userRole', 'verified')->group(function () {
     Route::get('/dashboard/user', [UserDashboard::class, 'index'])->name('dashboard');
     Route::resource('posts', PostController::class);
+    Route::post('posts/{post}/like', [LikeController::class, 'like'])->name('posts.like');
+    Route::delete('posts/{post}/unlike', [LikeController::class, 'unlike'])->name('posts.unlike');
+    Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::post('comments/{comment}/replies', [CommentController::class, 'reply'])->name('comments.reply');
+    Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 });
 
 // Admin Routes

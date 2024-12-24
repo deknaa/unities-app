@@ -71,10 +71,22 @@
                     </button>
     
                     <!-- Like Button -->
-                    <button class="btn btn-link text-decoration-none text-muted p-0">
+                    {{-- <button class="btn btn-link text-decoration-none text-muted p-0">
                         <i class="far fa-heart me-2"></i>
                         <span class="small me-3">{{ $post->likes->count() }}</span>
-                    </button>
+                    </button> --}}
+                    <form action="{{ route('posts.like', $post->id) }}" method="POST" class="d-flex">
+                        @csrf
+                        <button type="submit" class="btn btn-link text-decoration-none text-muted p-0"><i class="fa-regular fa-thumbs-up me-2"></i></button>
+                        <p>{{ $post->likes->count() }}</p>
+                    </form>
+                    
+                    <form action="{{ route('posts.unlike', $post->id) }}" method="POST" class="d-flex">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-link text-decoration-none text-muted p-0"><i class="fa-regular fa-thumbs-down me-2"></i></button>
+                        <p>0</p>
+                    </form>
     
                     <!-- Bookmark Button -->
                     <button class="btn btn-link text-decoration-none text-muted p-0">
