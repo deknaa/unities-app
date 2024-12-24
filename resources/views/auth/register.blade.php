@@ -69,7 +69,7 @@
                     <input type="password" class="form-control" id="password_confirmation"
                         placeholder="Konfirmasi Password" name="password_confirmation" required
                         autocomplete="new-password">
-                    <label for="password_confirmation">Password</label>
+                    <label for="password_confirmation">Confirm Password</label>
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                 </div>
 
@@ -88,7 +88,7 @@
                     <p class="text-muted">Or register with</p>
                     <a href="{{ route('google.login') }}" class="btn btn-outline-dark btn-lg w-100">
                         <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google" width="20" height="20" class="me-2">
-                        Continue with Google
+                        Register with Google
                     </a>
                 </div>
             </form>

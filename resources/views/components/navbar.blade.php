@@ -1,24 +1,47 @@
-<nav class="navbar bg-primary" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
     <div class="container">
-        <a class="navbar-brand">UnitiesApps</a>
-        @if (Route::has('login'))
-            @auth
-                <a href="{{ url('/dashboard') }}"
-                    class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
-                    Dashboard
-                </a>
-            @else
-                <a href="{{ route('login') }}" class="btn btn-outline-dark">
-                    Log in
-                </a>
+        <!-- Brand -->
+        <a class="navbar-brand" href="/">UnitiesApps</a>
+        
+        <!-- Hamburger button for mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-                {{-- @if (Route::has('register'))
-                <a href="{{ route('register') }}"
-                    class="btn btn-success">
-                    Register
-                </a>
-            @endif --}}
-            @endauth
-        @endif
+        <!-- Navigation items -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+            @if (Route::has('login'))
+                @auth
+                <div class="navbar-nav align-items-center gap-2">
+                    @if(Auth::user()->role == 'admin')
+                        <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
+                        <a href="{{ route('login') }}" class="nav-link">Manage Post</a>
+                        <a href="{{ route('login') }}" class="nav-link">Total Pengguna</a>
+                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-light">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </button>
+                        </form>
+                    @elseif(Auth::user()->role == 'user')
+                        <a href="{{ route('login') }}" class="nav-link">Profile</a>
+                        <a href="{{ route('login') }}" class="nav-link">Post</a>
+                        <a href="{{ route('login') }}" class="nav-link">Bookmark</a>
+                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-light">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-light">Log in</a>
+                    @endif
+                </div>
+                @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-light">Log in</a>
+                @endauth
+            @endif
+        </div>
     </div>
 </nav>

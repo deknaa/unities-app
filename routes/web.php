@@ -16,14 +16,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Admin Routes
-Route::middleware('auth', 'adminRole', 'verified')->group(function () {
-    Route::get('/dashboard/admin', [AdminDashboard::class, 'index'])->name('dashboard');
-});
-
 // User Routes
 Route::middleware('auth', 'userRole', 'verified')->group(function () {
     Route::get('/dashboard/user', [UserDashboard::class, 'index'])->name('dashboard');
+});
+
+// Admin Routes
+Route::middleware('auth', 'adminRole')->group(function () {
+    Route::get('/dashboard/admin', [AdminDashboard::class, 'index'])->name('admin.dashboard');
 });
 
 // Google Login
