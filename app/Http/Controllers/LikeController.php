@@ -14,7 +14,7 @@ class LikeController extends Controller
         $alreadyLiked = $post->likes()->where('user_id', Auth::id())->exists();
 
         if ($alreadyLiked) {
-            return response()->json(['message' => 'Anda telah menyukai postingan ini'], 400);
+            return redirect()->route('dashboard')->with('error', 'Anda telah menyukai postingan ini');
         }
 
         // Tambahkan like
@@ -22,7 +22,7 @@ class LikeController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        return response()->json(['message' => 'Postingan berhasil disukai']);
+        return redirect()->route('dashboard')->with('success', 'Postingan berhasil disukai!');
     }
 
     public function unlike(Post $post)
@@ -31,12 +31,31 @@ class LikeController extends Controller
         $like = $post->likes()->where('user_id', Auth::id())->first();
 
         if (!$like) {
-            return response()->json(['message' => 'Anda belum menyukai postingan ini'], 400);
+            return redirect()->route('dashboard')->with('error', 'Anda belum menyukai postingan ini');
         }
 
         // Hapus like
         $like->delete();
 
-        return response()->json(['message' => 'Postingan berhasil dihapus dari daftar menyukai']);
+        return redirect()->route('dashboard')->with('error', 'Postingan berhasil dihapus dari daftar menyukai');
+    }
+
+    public function toggle(Post $post)
+    {
+        $user = Auth::user();
+        $alreadyLiked = $post->likes()->where('user_id', $user->id)->exists();
+
+        if ($alreadyLiked) {
+            $post->likes()->where('user_id', $user->id)->delete();
+            $status = 'unliked';
+        } else {
+            $post->likes()->create(['user_id' => $user->id]);
+            $status = 'liked';
+        }
+
+        return response()->json([
+            'status' => $status,
+            'count' => $post->likes()->count(),
+        ]);
     }
 }

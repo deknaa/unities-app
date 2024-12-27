@@ -13,6 +13,7 @@ class Post extends Model
         'content',
         'media_type',
         'media_path',
+        'preview_data',
     ];
 
     public function user()
@@ -34,4 +35,8 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class)->whereNull('parent_id');
     }
+
+    protected $casts = [
+        'preview_data' => 'array'
+    ];
 }

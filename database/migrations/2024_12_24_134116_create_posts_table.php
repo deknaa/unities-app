@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('content');
             $table->string('media_type')->nullable(); 
             $table->string('media_path')->nullable();
+            $table->json('preview_data')->nullable();
             $table->timestamps();
         });
     }

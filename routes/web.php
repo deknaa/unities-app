@@ -32,11 +32,7 @@ Route::middleware('auth', 'userRole', 'verified')->group(function () {
     Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::post('posts/{post}/bookmark', [BookmarkController::class, 'store'])->name('posts.bookmark');
     Route::delete('posts/{post}/unbookmark', [BookmarkController::class, 'destroy'])->name('posts.unbookmark');
-    Route::get('bookmarks', function () {
-        $bookmarks = Auth::user()->bookmarks()->with('post')->get();
-        return view('bookmarks.index', compact('bookmarks'));
-    })->name('bookmarks.index');
-    
+    Route::get('/bookmarks', [BookmarkController::class, 'index'])->name('bookmarks.index');
 });
 
 // Admin Routes
@@ -50,4 +46,4 @@ Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])
     ->name('google.callback');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

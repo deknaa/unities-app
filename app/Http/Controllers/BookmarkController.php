@@ -2,19 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bookmark;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BookmarkController extends Controller
 {
+
+    // BookmarksController.php
+    public function index()
+    {
+        $bookmarks = Bookmark::where('user_id', Auth::id())
+            ->with('post.user') // Memuat postingan dan pembuatnya
+            ->get();
+
+        return view('bookmarks.index', compact('bookmarks'));
+    }
+
     public function store(Post $post)
     {
         // Periksa apakah post sudah di-bookmark
         $alreadyBookmarked = $post->bookmarks()->where('user_id', Auth::id())->exists();
 
         if ($alreadyBookmarked) {
-            return response()->json(['message' => 'Anda telah menyimpan postingan ini'], 400);
+            return redirect()->route('dashboard')->with('error', 'Postingan berhasil disimpan!');
         }
 
         // Tambahkan bookmark
@@ -31,7 +43,7 @@ class BookmarkController extends Controller
         $bookmark = $post->bookmarks()->where('user_id', Auth::id())->first();
 
         if (!$bookmark) {
-            return response()->json(['message' => 'Anda belum menyimpan postingan ini'], 400);
+            return redirect()->route('dashboard')->with('error', 'Postingan belum disimpan!');
         }
 
         // Hapus bookmark
