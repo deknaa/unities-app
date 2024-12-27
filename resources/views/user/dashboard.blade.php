@@ -186,6 +186,17 @@
                             <i class="far fa-eye me-1"></i>
                             <span class="small">Lihat Detail</span>
                         </a>
+                        {{-- Delet Post button --}}
+                        @if (auth()->user()->id == $post->user_id)
+                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?')">
+                                <i class="fa-solid fa-trash me-2"></i>
+                                Hapus Postingan
+                            </button>
+                        </form>
+                        @endif
                     </div>
                 </div>
             </div>

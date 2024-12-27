@@ -72,49 +72,11 @@ class PostController extends Controller
         return view('posts.show', compact('post'));
     }
 
-    public function edit(Post $post)
+    public function destroy($id)
     {
-        $this->authorize('update', $post); // Optional: Policy untuk akses edit
-        return view('posts.edit', compact('post'));
-    }
-
-    public function update(Request $request, Post $post)
-    {
-        $this->authorize('update', $post);
-
-        $request->validate([
-            'content' => 'required|string|max:500',
-            'media' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4|max:2048',
-        ]);
-
-        $post->content = $request->content;
-
-        if ($request->hasFile('media')) {
-            // Hapus file lama jika ada
-            if ($post->media_path) {
-                \Storage::disk('public')->delete($post->media_path);
-            }
-
-            $filePath = $request->file('media')->store('media', 'public');
-            $post->media_type = $request->file('media')->getMimeType();
-            $post->media_path = $filePath;
-        }
-
-        $post->save();
-
-        return redirect()->route('dashboard')->with('success', 'Post updated successfully!');
-    }
-
-    public function destroy(Post $post)
-    {
-        $this->authorize('delete', $post);
-
-        if ($post->media_path) {
-            \Storage::disk('public')->delete($post->media_path);
-        }
-
+        $post = Post::findOrFail($id);
         $post->delete();
 
-        return redirect()->route('dashboard')->with('success', 'Post deleted successfully!');
+        return redirect()->route('dashboard')->with('success', 'Postingan berhasil dihapus');    
     }
 }
