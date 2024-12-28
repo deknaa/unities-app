@@ -60,7 +60,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger"
-                                    onclick="return confirm('Are you sure you want to delete this post?')">
+                                    onclick="return confirm('Are you sure you want to delete this account?')">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </form>

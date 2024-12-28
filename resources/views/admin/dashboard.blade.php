@@ -14,9 +14,6 @@
                             <div class="flex-grow-1 ms-3">
                                 <div class="text-muted small">Total Users</div>
                                 <div class="fs-5 fw-semibold">{{ $totalUsers }}</div>
-                                <div class="text-success small">
-                                    <i class="bi bi-arrow-up"></i> 12% increase
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -34,9 +31,6 @@
                             <div class="flex-grow-1 ms-3">
                                 <div class="text-muted small">Total Posts</div>
                                 <div class="fs-5 fw-semibold">{{ $totalPosts }}</div>
-                                <div class="text-success small">
-                                    <i class="bi bi-arrow-up"></i> 8% increase
-                                </div>
                             </div>
                         </div>
                     </div>
