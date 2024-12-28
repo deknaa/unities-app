@@ -1,23 +1,5 @@
 <x-app-layout>
     <x-navbar></x-navbar>
-    {{-- <div class="container">
-        <h1>All Posts</h1>
-        @foreach ($posts as $post)
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">{{ $post->user->fullname }}</h5>
-                    <p class="card-text">{{ $post->content }}</p>
-                    @if ($post->media_path)
-                        <p class="text-center"><img src="{{ asset('storage/' . $post->media_path) }}" alt="Media" class="img-fluid w-25"></p>
-                    @endif
-                    <a href="{{ route('posts.show', $post->id) }}" class="btn btn-primary">View</a>
-                </div>
-            </div>
-        @endforeach
-    
-        {{ $posts->links() }}
-    </div> --}}
-
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <!-- Success Toast -->
         @if (session('success'))
@@ -55,7 +37,7 @@
                     <!-- Post Header: Profile, Name, Time -->
                     <div class="d-flex align-items-start mb-3">
                         <!-- Profile Picture -->
-                        <img src="{{ $post->user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($post->user->fullname) }}"
+                        <img src="{{ $post->user->avatar_url }}"
                             class="rounded-circle me-3" alt="Profile"
                             style="width: 48px; height: 48px; object-fit: cover;">
 
@@ -176,7 +158,6 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-link text-decoration-none text-muted p-0">
                                 <i class="far fa-bookmark me-2"></i>
-                                <span class="me-2">0</span>
                             </button>
                         </form>
 

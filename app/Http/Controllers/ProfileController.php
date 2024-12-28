@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -27,6 +28,15 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
+
+        if ($request->hasFile('avatar')) {
+            if ($request->user()->avatar && !str_starts_with($request->user()->avatar, 'http')) {
+                Storage::delete($request->user()->avatar);
+            }
+            
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $request->user()->avatar = $path;
+        }
 
         $request->user()->save();
 
