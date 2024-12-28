@@ -25,18 +25,63 @@
                     </div>
                 </div>
 
-                <!-- Post Content -->
+                {{-- post content --}}
                 <div class="post-content mb-3">
-                    <!-- Text Content -->
+                    {{-- text content --}}
                     <p class="mb-3">
-                        {{ $post->content }}
+                        {!! preg_replace(
+                            '/\bhttps?:\/\/\S+/i',
+                            '<a href="$0" target="_blank" class="text-primary text-decoration-none">$0</a>',
+                            e($post->content),
+                        ) !!}
+                        @if ($post->preview_data)
+                            <a href="{{ $post->preview_data['url'] }}" target="_blank" class="text-decoration-none">
+                                <div class="card border">
+                                    @if ($post->preview_data['image'])
+                                        <img src="{{ $post->preview_data['image'] }}" class="card-img-top"
+                                            style="height: 200px; object-fit: cover;" alt="Preview">
+                                    @endif
+                                    <div class="card-body p-3">
+                                        <h6 class="card-title text-dark mb-2">{{ $post->preview_data['title'] }}
+                                        </h6>
+                                        <p class="card-text small text-muted mb-2">
+                                            {{ Str::limit($post->preview_data['description'], 150) }}
+                                        </p>
+                                        <div class="d-flex align-items-center">
+                                            @if ($post->preview_data['favicon'])
+                                                <img src="{{ $post->preview_data['favicon'] }}" width="16"
+                                                    height="16" class="me-2" alt="Favicon">
+                                            @endif
+                                            <small
+                                                class="text-muted">{{ $post->preview_data['provider_name'] }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        @endif
                     </p>
 
                     @if ($post->media_path)
-                        <!-- Media Content (if any) -->
+                        {{-- gambar/video content --}}
                         <div class="post-media mb-3 text-center">
-                            <img src="{{ asset('storage/' . $post->media_path) }}" class="img-fluid rounded w-25"
-                                alt="Post image">
+                            @php
+                                $extension = pathinfo($post->media_path, PATHINFO_EXTENSION);
+                            @endphp
+
+                            @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
+                                <!-- If the media is an image -->
+                                <img src="{{ asset('storage/' . $post->media_path) }}"
+                                    class="img-fluid rounded w-25" alt="Post image">
+                            @elseif (in_array(strtolower($extension), ['mp4', 'webm', 'ogg']))
+                                <!-- If the media is a video -->
+                                <video controls class="img-fluid rounded w-50">
+                                    <source src="{{ asset('storage/' . $post->media_path) }}"
+                                        type="video/{{ $extension }}">
+                                    Browser anda tidak support tag <code>video</code>.
+                                </video>
+                            @else
+                                <p class="text-muted">File tidak dapat ditampilkan.</p>
+                            @endif
                         </div>
                     @endif
                 </div>
@@ -97,7 +142,16 @@
                         @foreach ($comment->replies as $reply)
                             <div class="mt-2">
                                 <strong>{{ $reply->user->fullname }}</strong>
-                                <p>{{ $reply->content }}</p>
+                                <div class="post-content mb-3">
+                                    {{-- text content --}}
+                                    <p class="mb-3">
+                                        {!! preg_replace(
+                                            '/\bhttps?:\/\/\S+/i',
+                                            '<a href="$0" target="_blank" class="text-primary text-decoration-none">$0</a>',
+                                            e($reply->content),
+                                        ) !!}
+                                    </p>
+                                </div>
                             </div>
                         @endforeach
                     </div>
