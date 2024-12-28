@@ -38,6 +38,10 @@ Route::middleware('auth', 'userRole', 'verified')->group(function () {
 // Admin Routes
 Route::middleware('auth', 'adminRole')->group(function () {
     Route::get('/dashboard/admin', [AdminDashboard::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/users/manage', [AdminDashboard::class, 'userManage'])->name('users.manage');  
+    Route::delete('/users/{user}', [AdminDashboard::class, 'destroy'])->name('users.destroy');
+    Route::get('/admin/posts/manage', [PostController::class, 'managePost'])->name('posts.manage');
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 });
 
 // Google Login

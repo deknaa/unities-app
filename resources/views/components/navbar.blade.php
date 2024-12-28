@@ -16,8 +16,8 @@
                 <div class="navbar-nav align-items-center gap-2">
                     @if(Auth::user()->role == 'admin')
                         <a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a>
-                        <a href="{{ route('login') }}" class="nav-link">Manage Post</a>
-                        <a href="{{ route('login') }}" class="nav-link">Total Pengguna</a>
+                        <a href="{{ route('posts.manage') }}" class="nav-link">Manage Post</a>
+                        <a href="{{ route('users.manage') }}" class="nav-link">Total Pengguna</a>
                         <form method="POST" action="{{ route('logout') }}" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-outline-light">

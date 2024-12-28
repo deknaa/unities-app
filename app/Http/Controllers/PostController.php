@@ -9,12 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    public function index()
-    {
-        $posts = Post::with('user')->latest()->paginate(10);
-        return view('posts.index', compact('posts'));
-    }
-
     public function create()
     {
         return view('posts.create');
@@ -77,6 +71,12 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $post->delete();
 
-        return redirect()->route('dashboard')->with('success', 'Postingan berhasil dihapus');    
+        return redirect()->back()->with('success', 'Postingan berhasil dihapus');    
+    }
+
+    public function managePost()
+    {
+        $posts = Post::with('user')->paginate(10);
+        return view('admin.posts-manage', compact('posts'));
     }
 }
