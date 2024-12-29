@@ -7,6 +7,7 @@
                 <!-- Create Post Card -->
                 <div class="card border-0 shadow-sm rounded-3">
                     <div class="card-body p-4">
+                        <h5 class="mb-4 fw-bold">Buat Postingan Baru</h5>
                         <!-- Header -->
                         <div class="d-flex align-items-center mb-4">
                             <div class="position-relative me-3">
@@ -16,7 +17,7 @@
                                     style="width: 48px; height: 48px; object-fit: cover;">
                             </div>
                             <div>
-                                <h5 class="mb-0 fw-bold">Buat Postingan Baru</h5>
+                                <h6 class="mb-0 fw-bold">{{ auth()->user()->fullname }}</h6>
                                 <small class="text-muted"><span>@</span>{{ auth()->user()->username }}</small>
                             </div>
                         </div>
