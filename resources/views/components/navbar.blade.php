@@ -13,17 +13,7 @@
         </button>
 
         <!-- Navbar Content -->
-        <div class="collapse navbar-collapse" id="navbarContent">
-            <!-- Search Form - Visible on larger screens -->
-            <form class="d-none d-lg-flex mx-lg-4 flex-grow-1">
-                <div class="input-group">
-                    <span class="input-group-text bg-transparent border-end-0 text-white nav-link">
-                        <i class="fas fa-search"></i>
-                    </span>
-                    <input type="search" class="form-control bg-transparent border-start-0" placeholder="Search..."
-                        aria-label="Search">
-                </div>
-            </form>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
 
             <!-- Authentication Links -->
             @if (Route::has('login'))
@@ -123,22 +113,7 @@
         overflow: hidden;
     }
 
-    .input-group-text,
-    .form-control {
-        border-color: transparent;
-    }
-
-    .form-control {
-        color: white !important;
-    }
-
-    .form-control::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-    }
-
-    .form-control:focus {
-        background-color: transparent;
-        box-shadow: none;
+    .input-group-text {
         border-color: transparent;
     }
 

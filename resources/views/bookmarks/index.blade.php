@@ -32,7 +32,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="container py-4">
+    <div class="container py-5 mt-5">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-8">
                 <!-- Page Header -->
