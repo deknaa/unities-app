@@ -26,7 +26,7 @@ class BookmarkController extends Controller
         $alreadyBookmarked = $post->bookmarks()->where('user_id', Auth::id())->exists();
 
         if ($alreadyBookmarked) {
-            return redirect()->route('dashboard')->with('error', 'Postingan berhasil disimpan!');
+            return redirect()->back()->with('error', 'Anda tidak dapat menyimpan postingan yang sudah disimpan!');
         }
 
         // Tambahkan bookmark
@@ -34,7 +34,7 @@ class BookmarkController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Postingan berhasil disimpan!');
+        return redirect()->back()->with('success', 'Postingan berhasil disimpan!');
     }
 
     public function destroy(Post $post)
@@ -43,12 +43,12 @@ class BookmarkController extends Controller
         $bookmark = $post->bookmarks()->where('user_id', Auth::id())->first();
 
         if (!$bookmark) {
-            return redirect()->route('dashboard')->with('error', 'Postingan belum disimpan!');
+            return redirect()->back()->with('error', 'Postingan belum disimpan!');
         }
 
         // Hapus bookmark
         $bookmark->delete();
 
-        return redirect()->route('bookmarks.index')->with('success', 'Simpanan postingan berhasil dihapus!');
+        return redirect()->back()->with('success', 'Simpanan postingan berhasil dihapus!');
     }
 }

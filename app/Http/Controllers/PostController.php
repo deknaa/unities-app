@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Embed\Embed;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -20,28 +21,28 @@ class PostController extends Controller
             'content' => 'required|string',
             'media' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,wmv,webm|max:3072',
         ]);
-    
+
         $post = new Post();
         $post->user_id = Auth::id();
         $post->content = $request->content;
-    
+
         if ($request->hasFile('media')) {
             $filePath = $request->file('media')->store('media', 'public');
             $post->media_type = $request->file('media')->getMimeType();
             $post->media_path = $filePath;
         }
-    
+
         preg_match_all('/\bhttps?:\/\/\S+/i', $request->content, $matches);
         $urls = $matches[0] ?? [];
-    
+
         $preview_data = null;
-        
+
         if (!empty($urls)) {
             $embed = new Embed();
-            
+
             try {
                 $info = $embed->get($urls[0]);
-                
+
                 $preview_data = [
                     'url' => $urls[0],
                     'title' => $info->title ?? null,
@@ -54,16 +55,30 @@ class PostController extends Controller
                 \Log::error('URL preview error: ' . $e->getMessage());
             }
         }
-    
+
         $post->preview_data = $preview_data;
         $post->save();
-    
+
         return redirect()->route('dashboard')->with('success', 'Postingan anda telah berhasil dibuat');
     }
 
     public function show(Post $post)
     {
-        return view('posts.show', compact('post'));
+        // Hitung total komentar dan reply
+        $totalComments = $this->countCommentsAndReplies($post->comments);
+        return view('posts.show', compact('post', 'totalComments'));
+    }
+
+    private function countCommentsAndReplies(Collection $comments)
+    {
+        $total = 0;
+
+        foreach ($comments as $comment) {
+            $total++; // Hitung komentar utama
+            $total += $this->countCommentsAndReplies($comment->replies);
+        }
+
+        return $total;
     }
 
     public function destroy($id)
@@ -71,7 +86,7 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $post->delete();
 
-        return redirect()->back()->with('success', 'Postingan berhasil dihapus');    
+        return redirect()->back()->with('success', 'Postingan berhasil dihapus');
     }
 
     public function managePost()

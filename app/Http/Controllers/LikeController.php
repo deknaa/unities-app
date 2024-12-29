@@ -14,7 +14,7 @@ class LikeController extends Controller
         $alreadyLiked = $post->likes()->where('user_id', Auth::id())->exists();
 
         if ($alreadyLiked) {
-            return redirect()->route('dashboard')->with('error', 'Anda telah menyukai postingan ini');
+            return redirect()->back()->with('error', 'Anda telah menyukai postingan ini');
         }
 
         // Tambahkan like
@@ -22,7 +22,7 @@ class LikeController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Postingan berhasil disukai!');
+        return redirect()->back()->with('success', 'Postingan berhasil disukai!');
     }
 
     public function unlike(Post $post)
@@ -31,13 +31,13 @@ class LikeController extends Controller
         $like = $post->likes()->where('user_id', Auth::id())->first();
 
         if (!$like) {
-            return redirect()->route('dashboard')->with('error', 'Anda belum menyukai postingan ini');
+            return redirect()->back()->with('error', 'Anda belum menyukai postingan ini');
         }
 
         // Hapus like
         $like->delete();
 
-        return redirect()->route('dashboard')->with('error', 'Postingan berhasil dihapus dari daftar menyukai');
+        return redirect()->back()->with('error', 'Postingan berhasil dihapus dari daftar menyukai');
     }
 
     public function toggle(Post $post)

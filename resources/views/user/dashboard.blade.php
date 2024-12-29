@@ -1,254 +1,276 @@
 <x-app-layout>
     <x-navbar></x-navbar>
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <!-- Success Toast -->
-        @if (session('success'))
-            <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
-                aria-atomic="true" id="successToast">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        {{ session('success') }}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                        aria-label="Close"></button>
-                </div>
-            </div>
-        @endif
-
-        <!-- Error Toast -->
-        @if (session('error'))
-            <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
-                aria-atomic="true" id="errorToast">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        {{ session('error') }}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                        aria-label="Close"></button>
-                </div>
-            </div>
-        @endif
-    </div>
-
-    <div class="container py-3">
-        @foreach ($posts as $post)
-            <div class="card border-0 shadow-sm mb-3">
-                <div class="card-body p-3">
-                    <!-- Post Header: Profile, Name, Time -->
-                    <div class="d-flex align-items-start mb-3">
-                        <!-- Profile Picture -->
-                        <img src="{{ $post->user->avatar_url }}" class="rounded-circle me-3" alt="Profile"
-                            style="width: 48px; height: 48px; object-fit: cover;">
-
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <!-- Name and Username -->
-                                    <h6 class="mb-0 fw-bold">{{ $post->user->fullname }}</h6>
-                                    <small class="text-muted"><span>@</span>{{ $post->user->username }}</small>
+    <x-toast></x-toast>
+    <!-- Main Content -->
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                @foreach ($posts as $post)
+                    <div class="card border-0 shadow-sm mb-4 post-card">
+                        <div class="card-body p-4">
+                            <!-- Post Header -->
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="position-relative">
+                                    <img src="{{ $post->user->avatar_url }}" 
+                                         class="rounded-circle border me-3" 
+                                         alt="Profile"
+                                         style="width: 50px; height: 50px; object-fit: cover;">
+                                    <div class="online-indicator"></div>
                                 </div>
 
-                                <!-- Timestamp -->
-                                <small class="text-muted">
-                                    <i class="far fa-clock me-1"></i>{{ $post->created_at->diffForHumans() }}
-                                </small>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-0 fw-bold text-dark">{{ $post->user->fullname }}</h6>
+                                            <div class="d-flex align-items-center">
+                                                <small class="text-muted"><span>@</span>{{ $post->user->username }}</small>
+                                                <span class="mx-2 text-muted">•</span>
+                                                <small class="text-muted">
+                                                    <i class="far fa-clock me-1"></i>
+                                                    {{ $post->created_at->diffForHumans() }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                        
+                                        @if (auth()->user()->id == $post->user_id)
+                                            <div class="dropdown">
+                                                <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown">
+                                                    <i class="fas fa-ellipsis-h"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="dropdown-item text-danger" 
+                                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?')">
+                                                                <i class="fas fa-trash-alt me-2"></i>Hapus Postingan
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Post Content -->
+                            <div class="post-content">
+                                <p class="mb-3 text-break">
+                                    {!! preg_replace(
+                                        '/\bhttps?:\/\/\S+/i',
+                                        '<a href="$0" target="_blank" class="text-primary fw-medium">$0</a>',
+                                        e($post->content),
+                                    ) !!}
+                                </p>
+
+                                <!-- Link Preview -->
+                                @if ($post->preview_data)
+                                    <a href="{{ $post->preview_data['url'] }}" target="_blank" 
+                                       class="text-decoration-none mb-3 d-block link-preview">
+                                        <div class="card border rounded-3">
+                                            @if ($post->preview_data['image'])
+                                                <img src="{{ $post->preview_data['image'] }}"
+                                                     class="card-img-top rounded-top"
+                                                     style="height: 200px; object-fit: cover;"
+                                                     alt="Preview">
+                                            @endif
+                                            <div class="card-body p-3">
+                                                <h6 class="card-title text-dark mb-2 fw-bold">
+                                                    {{ $post->preview_data['title'] }}
+                                                </h6>
+                                                <p class="card-text small text-muted mb-2">
+                                                    {{ Str::limit($post->preview_data['description'], 150) }}
+                                                </p>
+                                                <div class="d-flex align-items-center">
+                                                    @if ($post->preview_data['favicon'])
+                                                        <img src="{{ $post->preview_data['favicon'] }}"
+                                                             width="16" height="16"
+                                                             class="me-2 rounded" alt="Favicon">
+                                                    @endif
+                                                    <small class="text-muted">
+                                                        {{ $post->preview_data['provider_name'] }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endif
+
+                                <!-- Media Content -->
+                                @if ($post->media_path)
+                                    <div class="post-media mb-3">
+                                        @php
+                                            $extension = pathinfo($post->media_path, PATHINFO_EXTENSION);
+                                        @endphp
+
+                                        @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
+                                            <img src="{{ asset('storage/' . $post->media_path) }}"
+                                                 class="img-fluid rounded-3 w-100"
+                                                 style="max-height: 500px; object-fit: cover;"
+                                                 alt="Post image">
+                                        @elseif (in_array(strtolower($extension), ['mp4', 'webm', 'ogg']))
+                                            <div class="ratio ratio-16x9">
+                                                <video controls class="rounded-3">
+                                                    <source src="{{ asset('storage/' . $post->media_path) }}"
+                                                            type="video/{{ $extension }}">
+                                                    Browser anda tidak support tag <code>video</code>.
+                                                </video>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
+
+                                <!-- Post Actions -->
+                                <div class="d-flex align-items-center pt-3 border-top">
+                                    <div class="d-flex gap-4">
+                                        <!-- Comment Button -->
+                                        <a href="{{ route('posts.show', $post->id) }}" 
+                                           class="btn btn-link text-decoration-none text-muted p-0 action-button">
+                                            <i class="far fa-comment me-2"></i>
+                                            <span class="small">{{ $post->comments->count() }}</span>
+                                        </a>
+
+                                        <!-- Like/Unlike Buttons -->
+                                        <div class="d-flex gap-2">
+                                            <form action="{{ route('posts.like', $post->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" 
+                                                        class="btn btn-link text-decoration-none text-muted p-0 action-button">
+                                                    <i class="far fa-thumbs-up me-2"></i>
+                                                    <span>{{ $post->likes->count() }}</span>
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('posts.unlike', $post->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" 
+                                                        class="btn btn-link text-decoration-none text-muted p-0 action-button">
+                                                    <i class="far fa-thumbs-down"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        <!-- Bookmark Buttons -->
+                                        <div class="d-flex gap-2">
+                                            <form action="{{ route('posts.bookmark', $post->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" 
+                                                        class="btn btn-link text-decoration-none text-muted p-0 action-button">
+                                                    <i class="far fa-bookmark me-2"></i>
+                                                    <span>{{ $post->bookmarks->count() }}</span>
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('posts.unbookmark', $post->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" 
+                                                        class="btn btn-link text-decoration-none text-muted p-0 action-button">
+                                                    <i class="fas fa-bookmark"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <!-- View Detail Button -->
+                                    <a href="{{ route('posts.show', $post->id) }}" 
+                                       class="btn btn-light btn-sm rounded-pill ms-auto">
+                                        <i class="far fa-eye me-1"></i>
+                                        Lihat Detail
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
+                @endforeach
 
-                    {{-- post content --}}
-                    <div class="post-content mb-3">
-                        {{-- text content --}}
-                        <p class="mb-3">
-                            {!! preg_replace(
-                                '/\bhttps?:\/\/\S+/i',
-                                '<a href="$0" target="_blank" class="text-primary text-decoration-none">$0</a>',
-                                e($post->content),
-                            ) !!}
-                            @if ($post->preview_data)
-                                <a href="{{ $post->preview_data['url'] }}" target="_blank" class="text-decoration-none">
-                                    <div class="card border">
-                                        @if ($post->preview_data['image'])
-                                            <img src="{{ $post->preview_data['image'] }}" class="card-img-top"
-                                                style="height: 200px; object-fit: cover;" alt="Preview">
-                                        @endif
-                                        <div class="card-body p-3">
-                                            <h6 class="card-title text-dark mb-2">{{ $post->preview_data['title'] }}
-                                            </h6>
-                                            <p class="card-text small text-muted mb-2">
-                                                {{ Str::limit($post->preview_data['description'], 150) }}
-                                            </p>
-                                            <div class="d-flex align-items-center">
-                                                @if ($post->preview_data['favicon'])
-                                                    <img src="{{ $post->preview_data['favicon'] }}" width="16"
-                                                        height="16" class="me-2" alt="Favicon">
-                                                @endif
-                                                <small
-                                                    class="text-muted">{{ $post->preview_data['provider_name'] }}</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            @endif
-                        </p>
-
-                        @if ($post->media_path)
-                            {{-- gambar/video content --}}
-                            <div class="post-media mb-3 text-center">
-                                @php
-                                    $extension = pathinfo($post->media_path, PATHINFO_EXTENSION);
-                                @endphp
-
-                                @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
-                                    <!-- If the media is an image -->
-                                    <img src="{{ asset('storage/' . $post->media_path) }}"
-                                        class="img-fluid rounded w-25" alt="Post image">
-                                @elseif (in_array(strtolower($extension), ['mp4', 'webm', 'ogg']))
-                                    <!-- If the media is a video -->
-                                    <video controls class="img-fluid rounded w-50">
-                                        <source src="{{ asset('storage/' . $post->media_path) }}"
-                                            type="video/{{ $extension }}">
-                                        Browser anda tidak support tag <code>video</code>.
-                                    </video>
-                                @else
-                                    <p class="text-muted">File tidak dapat ditampilkan.</p>
-                                @endif
-                            </div>
-                        @endif
-                    </div>
-
-                    <!-- Post Actions -->
-                    <div class="d-flex align-items-center border-top pt-3">
-                        <!-- Comment Button -->
-                        <a href="{{ route('posts.show', $post->id) }}"
-                            class="btn btn-link text-decoration-none text-muted p-0">
-                            <i class="far fa-comment me-2"></i>
-                            <span class="small me-3">{{ $post->comments->count() }}</span>
-                        </a>
-
-                        <!-- Like Button -->
-                        <form action="{{ route('posts.like', $post->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-link text-decoration-none text-muted p-0">
-                                <i class="fa-regular fa-thumbs-up me-2"></i>
-                                <span class="me-2">{{ $post->likes->count() }}</span>
-                            </button>
-                        </form>
-
-                        <form action="{{ route('posts.unlike', $post->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-link text-decoration-none text-muted p-0">
-                                <i class="fa-regular fa-thumbs-down me-2"></i>
-                            </button>
-                        </form>
-
-                        <!-- Bookmark Button -->
-                        <form action="{{ route('posts.bookmark', $post->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-link text-decoration-none text-muted p-0">
-                                <i class="fa-solid fa-bookmark me-2"></i>
-                                <span class="small me-3">{{ $post->bookmarks->count() }}</span>
-                            </button>
-                        </form>
-                        <form action="{{ route('posts.unbookmark', $post->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-link text-decoration-none text-muted p-0">
-                                <i class="far fa-bookmark me-2"></i>
-                            </button>
-                        </form>
-
-                        <!-- Bookmark Button -->
-                        <a href="{{ route('posts.show', $post->id) }}"
-                            class="btn btn-link text-decoration-none text-muted ms-auto">
-                            <i class="far fa-eye me-1"></i>
-                            <span class="small">Lihat Detail</span>
-                        </a>
-                        {{-- Delet Post button --}}
-                        @if (auth()->user()->id == $post->user_id)
-                            <form action="{{ route('posts.destroy', $post->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?')">
-                                    <i class="fa-solid fa-trash me-2"></i>
-                                    Hapus Postingan
-                                </button>
-                            </form>
-                        @endif
-                    </div>
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center">
+                    {{ $posts->links() }}
                 </div>
             </div>
-        @endforeach
-        {{ $posts->links() }}
+        </div>
     </div>
 
     <style>
-        /* Custom Styles */
-        .card {
-            border-radius: 15px;
+        .post-card {
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.08)!important;
+        }
+
+        .online-indicator {
+            width: 12px;
+            height: 12px;
+            background-color: #28a745;
+            border: 2px solid white;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            right: 12px;
+        }
+
+        .action-button {
             transition: all 0.2s ease;
+            border-radius: 0.5rem;
+            padding: 0.5rem!important;
         }
 
-        .card:hover {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+        .action-button:hover {
+            background-color: rgba(13, 110, 253, 0.1);
+            color: #0d6efd!important;
         }
 
-        .btn-link {
-            transition: all 0.2s ease;
+        .action-button:hover .fa-thumbs-up {
+            color: #0d6efd;
         }
 
-        .btn-link:hover {
-            color: #0d6efd !important;
-            transform: scale(1.05);
-        }
-
-        .btn-link:hover .fa-heart {
+        .action-button:hover .fa-thumbs-down {
             color: #dc3545;
         }
 
-        .btn-link:hover .fa-bookmark {
+        .action-button:hover .fa-bookmark {
             color: #198754;
         }
 
-        .post-media {
-            position: relative;
-            overflow: hidden;
-            border-radius: 15px;
+        .link-preview {
+            transition: all 0.3s ease;
         }
 
-        .post-media img {
-            width: 100%;
-            transition: transform 0.3s ease;
+        .link-preview:hover {
+            transform: translateY(-2px);
         }
 
-        .post-media:hover img {
-            transform: scale(1.02);
+        .post-media img,
+        .post-media video {
+            transition: all 0.3s ease;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 576px) {
+        .post-media:hover img,
+        .post-media:hover video {
+            transform: scale(1.01);
+        }
+
+        /* Toast improvements */
+        .toast {
+            opacity: 0.95;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
             .card-body {
                 padding: 1rem;
             }
+
+            .action-button {
+                padding: 0.25rem!important;
+            }
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inisialisasi toast jika ada session success atau error
-            var successToastEl = document.getElementById('successToast');
-            var errorToastEl = document.getElementById('errorToast');
-
-            if (successToastEl) {
-                var successToast = new bootstrap.Toast(successToastEl);
-                successToast.show();
-            }
-
-            if (errorToastEl) {
-                var errorToast = new bootstrap.Toast(errorToastEl);
-                errorToast.show();
-            }
-        });
-    </script>
 </x-app-layout>
