@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-navbar></x-navbar>
     {{-- Dashboard --}}
-    <div class="container py-4">
+    <div class="container py-5 mt-5">
         {{-- Total Users --}}
         <div class="row g-3 mb-4">
             <div class="col-12 col-sm-6 col-xl-4">

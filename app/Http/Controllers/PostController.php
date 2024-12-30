@@ -91,7 +91,7 @@ class PostController extends Controller
 
     public function managePost()
     {
-        $posts = Post::with('user')->paginate(10);
+        $posts = Post::with('user')->simplePaginate(5);
         return view('admin.posts-manage', compact('posts'));
     }
 }

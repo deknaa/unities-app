@@ -30,7 +30,7 @@
         @endif
     </div>
 
-    <div class="container">
+    <div class="container py-5 mt-5">
         <h1>Manage User Posts</h1>
         <table class="table">
             <thead>
@@ -68,7 +68,7 @@
                         </td>
                     </tr>
 
-                    <!-- Modal for Post Details -->
+                    {{-- Post Detail Modal --}}
                     <div class="modal fade" id="postDetailModal-{{ $post->id }}" tabindex="-1"
                         aria-labelledby="postDetailModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
@@ -79,9 +79,8 @@
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <!-- Post Details -->
+                                    {{-- post detail --}}
                                     <div class="d-flex align-items-start mb-3">
-                                        <!-- Author Avatar -->
                                         <img src="{{ $post->user->avatar_url }}" alt="Profile photo"
                                             class="rounded-circle me-3"
                                             style="width: 60px; height: 60px; object-fit: cover;">
@@ -144,11 +143,11 @@
                                                 @endphp
 
                                                 @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
-                                                    <!-- If the media is an image -->
+                                                    {{-- if the media is an image --}}
                                                     <img src="{{ asset('storage/' . $post->media_path) }}"
                                                         class="img-fluid rounded w-25" alt="Post image">
                                                 @elseif (in_array(strtolower($extension), ['mp4', 'webm', 'ogg']))
-                                                    <!-- If the media is a video -->
+                                                    {{-- if the media is a video --}}
                                                     <video controls class="img-fluid rounded w-50">
                                                         <source src="{{ asset('storage/' . $post->media_path) }}"
                                                             type="video/{{ $extension }}">
@@ -171,5 +170,6 @@
                 @endforeach
             </tbody>
         </table>
+        {{ $posts->links() }}
     </div>
 </x-app-layout>
