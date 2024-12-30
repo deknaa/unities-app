@@ -22,7 +22,7 @@ class DashboardController extends Controller
 
     public function userManage()
     {
-        $users = User::all();
+        $users = User::simplePaginate(5);
         return view('admin.users-manage', compact('users'));
     }
 

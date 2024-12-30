@@ -19,7 +19,7 @@ class PostController extends Controller
     {
         $request->validate([
             'content' => 'required|string',
-            'media' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,wmv,webm|max:3072',
+            'media' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,wmv,webm,mkv|max:10240',
         ]);
 
         $post = new Post();

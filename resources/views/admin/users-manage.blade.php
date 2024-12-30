@@ -29,7 +29,7 @@
             </div>
         @endif
     </div>
-    <div class="container">
+    <div class="container py-5 mt-5">
         <h1>Manage User</h1>
         <table class="table">
             <thead>
@@ -108,5 +108,6 @@
                 @endforeach
             </tbody>
         </table>
+        {{ $users->links() }}
     </div>
 </x-app-layout>

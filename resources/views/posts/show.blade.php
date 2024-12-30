@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-navbar></x-navbar>
     <x-toast></x-toast>
-    <div class="container py-4">
+    <div class="container py-5 mt-5">
         <!-- Main Post Card -->
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
