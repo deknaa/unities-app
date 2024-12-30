@@ -31,26 +31,6 @@
                                                 </small>
                                             </div>
                                         </div>
-                                        
-                                        @if (auth()->user()->id == $post->user_id)
-                                            <div class="dropdown">
-                                                <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li>
-                                                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="dropdown-item text-danger" 
-                                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?')">
-                                                                <i class="fas fa-trash-alt me-2"></i>Hapus Postingan
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        @endif
                                     </div>
                                 </div>
                             </div>
