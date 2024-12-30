@@ -174,7 +174,7 @@
                             </form>
                         </div>
 
-                        <!-- Comments Section -->
+                        {{-- Comments --}}
                         <div class="comments">
                             <h5 class="mb-4">Comments ({{ $totalComments }})</h5>
                             @foreach ($post->comments as $comment)

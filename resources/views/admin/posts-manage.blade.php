@@ -159,6 +159,85 @@
                                             </div>
                                         @endif
                                     </div>
+
+                                    <div class="comments">
+                                        {{-- <h5 class="mb-4">Comments ({{ $totalComments }})</h5> --}}
+                                        @foreach ($post->comments as $comment)
+                                            <div class="comment mb-4">
+                                                <div class="d-flex mb-3">
+                                                    <img src="{{ $comment->user->avatar_url }}" class="rounded-circle me-2"
+                                                        width="40" height="40" alt="{{ $comment->user->fullname }}">
+                                                    <div class="flex-grow-1">
+                                                        <div class="bg-light rounded-3 p-3">
+                                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                <h6 class="mb-0">{{ $comment->user->fullname }}</h6>
+                                                                <div class="d-flex align-items-center">
+                                                                    <small class="text-muted me-3">
+                                                                        {{ $comment->created_at->diffForHumans() }}
+                                                                    </small>
+                                                                    @if (auth()->user()->id === $comment->user_id || auth()->user()->role === 'admin')
+                                                                        <form
+                                                                            action="{{ route('comments.destroy.admin', $comment->id) }}"
+                                                                            method="POST" class="delete-comment-form">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit"
+                                                                                class="btn btn-link text-danger p-0 btn-sm"
+                                                                                onclick="return confirm('Anda yakin ingin menghapus komentar ini?')">
+                                                                                <i class="fas fa-trash-alt"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            <p class="mb-0">{{ $comment->content }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+            
+                                                <!-- Replies -->
+                                                @if ($comment->replies->count())
+                                                    <div class="ms-5">
+                                                        @foreach ($comment->replies as $reply)
+                                                            <div class="d-flex mb-3">
+                                                                <img src="{{ $reply->user->avatar_url }}"
+                                                                    class="rounded-circle me-2" width="32" height="32"
+                                                                    alt="{{ $reply->user->fullname }}">
+                                                                <div class="flex-grow-1">
+                                                                    <div class="bg-light rounded-3 p-3">
+                                                                        <div
+                                                                            class="d-flex justify-content-between align-items-center mb-2">
+                                                                            <h6 class="mb-0 small">{{ $reply->user->fullname }}
+                                                                            </h6>
+                                                                            <div class="d-flex align-items-center">
+                                                                                <small class="text-muted me-3">
+                                                                                    {{ $reply->created_at->diffForHumans() }}
+                                                                                </small>
+                                                                                @if (auth()->user()->id === $reply->user_id || auth()->user()->role === 'admin')
+                                                                                    <form
+                                                                                        action="{{ route('comments.destroy.admin', $reply->id) }}"
+                                                                                        method="POST" class="delete-reply-form">
+                                                                                        @csrf
+                                                                                        @method('DELETE')
+                                                                                        <button type="submit"
+                                                                                            class="btn btn-link text-danger p-0 btn-sm"
+                                                                                            onclick="return confirm('Anda yakin ingin menghapus pesan ini?')">
+                                                                                            <i class="fas fa-trash-alt"></i>
+                                                                                        </button>
+                                                                                    </form>
+                                                                                @endif
+                                                                            </div>
+                                                                        </div>
+                                                                        <p class="mb-0 small">{{ $reply->content }}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
