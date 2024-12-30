@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth', 'userRole', 'verified')->group(function () {
     Route::get('/dashboard/user', [UserDashboard::class, 'index'])->name('dashboard');
     Route::resource('posts', PostController::class);
+    Route::delete('/posts/{post}/delete', [PostController::class, 'destroy'])->name('posts.destroy.user');
     Route::post('posts/{post}/like', [LikeController::class, 'like'])->name('posts.like');
     Route::delete('posts/{post}/unlike', [LikeController::class, 'unlike'])->name('posts.unlike');
     Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');

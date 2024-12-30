@@ -174,11 +174,21 @@
                                     </div>
 
                                     <!-- View Detail Button -->
-                                    <a href="{{ route('posts.show', $post->id) }}" 
-                                       class="btn btn-light btn-sm rounded-pill ms-auto">
+                                    <a href="{{ route('posts.show', $post->id) }}"
+                                        class="btn btn-light btn-sm rounded-pill ms-auto">
                                         <i class="far fa-eye me-1"></i>
                                         Lihat Detail
                                     </a>
+                                    @if (auth()->user()->id == $post->user_id)
+                                        <form action="{{ route('posts.destroy.user', $post->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-light text-danger btn-sm rounded-pill ms-auto"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?')">
+                                                <i class="fas fa-trash-alt me-2"></i>Hapus Postingan
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </div>
                         </div>

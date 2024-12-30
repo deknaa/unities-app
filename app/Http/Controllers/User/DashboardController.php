@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $posts = Post::with('user')->latest()->paginate(10);
+        $posts = Post::with('user')->latest()->simplePaginate(10);
         return view('user.dashboard', compact('posts'));
     }
 }

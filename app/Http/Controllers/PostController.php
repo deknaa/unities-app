@@ -81,12 +81,16 @@ class PostController extends Controller
         return $total;
     }
 
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        $post = Post::findOrFail($id);
-        $post->delete();
+        if (Auth::user()->role === 'admin' || Auth::id() === $post->user_id) {
+            // Hapus post
+            $post->delete();
 
-        return redirect()->back()->with('success', 'Postingan berhasil dihapus');
+            return redirect()->back()->with('success', 'Post berhasil dihapus.');
+        }
+
+        return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menghapus post ini.');
     }
 
     public function managePost()

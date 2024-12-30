@@ -12,7 +12,7 @@
                             <div class="position-relative">
                                 <img src="{{ $post->user->avatar_url }}" class="rounded-circle border me-3" alt="Profile"
                                     width="52" height="52" style="object-fit: cover;">
-                                    <div class="online-indicator"></div>
+                                <div class="online-indicator"></div>
                             </div>
 
                             <div class="flex-grow-1">
@@ -139,12 +139,25 @@
                                 </div>
                             </div>
 
-                            <!-- Back Button -->
-                            <a href="{{ route('dashboard', $post->id) }}"
-                                class="btn btn-light btn-sm rounded-pill ms-auto">
-                                <i class="fa-solid fa-arrow-left me-1"></i>
-                                Back
-                            </a>
+                            <div class="ms-auto d-flex gap-2">
+                                @if (auth()->user()->id == $post->user_id)
+                                    <form action="{{ route('posts.destroy.user', $post->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="btn btn-light text-danger btn-sm rounded-pill ms-auto"
+                                            onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?')">
+                                            <i class="fas fa-trash-alt me-2"></i>Hapus Postingan
+                                        </button>
+                                    </form>
+                                @endif
+                                <!-- Back Button -->
+                                <a href="{{ route('dashboard', $post->id) }}"
+                                    class="btn btn-light btn-sm rounded-pill ms-auto">
+                                    <i class="fa-solid fa-arrow-left me-1"></i>
+                                    Back
+                                </a>
+                            </div>
                         </div>
 
                         <!-- Comment Form -->
@@ -173,9 +186,24 @@
                                             <div class="bg-light rounded-3 p-3">
                                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                                     <h6 class="mb-0">{{ $comment->user->fullname }}</h6>
-                                                    <small class="text-muted">
-                                                        {{ $comment->created_at->diffForHumans() }}
-                                                    </small>
+                                                    <div class="d-flex align-items-center">
+                                                        <small class="text-muted me-3">
+                                                            {{ $comment->created_at->diffForHumans() }}
+                                                        </small>
+                                                        @if (auth()->user()->id === $comment->user_id || auth()->user()->is_admin)
+                                                            <form
+                                                                action="{{ route('comments.destroy', $comment->id) }}"
+                                                                method="POST" class="delete-comment-form">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit"
+                                                                    class="btn btn-link text-danger p-0 btn-sm"
+                                                                    onclick="return confirm('Anda yakin ingin menghapus komentar ini?')">
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                                 <p class="mb-0">{{ $comment->content }}</p>
                                             </div>
@@ -217,9 +245,24 @@
                                                                 class="d-flex justify-content-between align-items-center mb-2">
                                                                 <h6 class="mb-0 small">{{ $reply->user->fullname }}
                                                                 </h6>
-                                                                <small class="text-muted">
-                                                                    {{ $reply->created_at->diffForHumans() }}
-                                                                </small>
+                                                                <div class="d-flex align-items-center">
+                                                                    <small class="text-muted me-3">
+                                                                        {{ $reply->created_at->diffForHumans() }}
+                                                                    </small>
+                                                                    @if (auth()->user()->id === $reply->user_id || auth()->user()->role === 'admin')
+                                                                        <form
+                                                                            action="{{ route('comments.destroy', $reply->id) }}"
+                                                                            method="POST" class="delete-reply-form">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit"
+                                                                                class="btn btn-link text-danger p-0 btn-sm"
+                                                                                onclick="return confirm('Anda yakin ingin menghapus pesan ini?')">
+                                                                                <i class="fas fa-trash-alt"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                    @endif
+                                                                </div>
                                                             </div>
                                                             <p class="mb-0 small">{{ $reply->content }}</p>
                                                         </div>
@@ -357,6 +400,23 @@
 
     .action-button:hover .fa-bookmark {
         color: #198754;
+    }
+
+    .delete-comment-form button,
+    .delete-reply-form button {
+        opacity: 0.7;
+        transition: all 0.2s ease;
+    }
+
+    .delete-comment-form button:hover,
+    .delete-reply-form button:hover {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .bg-light:hover .delete-comment-form button,
+    .bg-light:hover .delete-reply-form button {
+        opacity: 1;
     }
 </style>
 

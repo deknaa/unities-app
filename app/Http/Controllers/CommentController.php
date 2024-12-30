@@ -12,7 +12,7 @@ class CommentController extends Controller
     public function store(Request $request, Post $post)
     {
         $request->validate([
-            'content' => 'required|string|max:500',
+            'content' => 'required|string|max:1500',
         ]);
 
         $comment = new Comment();
@@ -21,13 +21,13 @@ class CommentController extends Controller
         $comment->content = $request->content;
         $comment->save();
 
-        return redirect()->route('posts.show', $post->id)->with('success', 'Comment added successfully!');
+        return redirect()->route('posts.show', $post->id)->with('success', 'Komentar berhasil ditambahkan!');
     }
 
     public function reply(Request $request, Comment $comment)
     {
         $request->validate([
-            'content' => 'required|string|max:500',
+            'content' => 'required|string|max:1500',
         ]);
 
         $reply = new Comment();
@@ -37,15 +37,19 @@ class CommentController extends Controller
         $reply->content = $request->content;
         $reply->save();
 
-        return redirect()->route('posts.show', $comment->post_id)->with('success', 'Reply added successfully!');
+        return redirect()->route('posts.show', $comment->post_id)->with('success', 'Balasan pesan berhasil ditambahkan!');
     }
 
     public function destroy(Comment $comment)
     {
-        $this->authorize('delete', $comment);
+        // Check if user is authorized to delete the comment
+        if (Auth::user()->id !== $comment->user_id && !Auth::user()->role === 'admin') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk menghapus komentar ini.');
+        }
 
+        // Delete the comment
         $comment->delete();
 
-        return back()->with('success', 'Comment deleted successfully!');
+        return redirect()->back()->with('success', 'Komentar telah berhasil dihapus,');
     }
 }
